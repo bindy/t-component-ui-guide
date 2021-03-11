@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="test"></canvas>
+    <script src="./canvas.js"></script>
+<script>
+const canvas = new Canvas(document.querySelector('#test'))
+console.log(canvas)
+const rect = canvas.rect({x:0,y:0,width:10,height:10,fillStyle:'#000'})
+console.log(rect)
+
+rect.on('click',(e)=>console.log(1))
+const rect2 = canvas.rect({x:0,y:0,width:40,height:40,fillStyle:'#f00'})
+console.log(rect2)
+
+rect2.on('click',(e)=>console.log(2))
+canvas.draw()
+
+Function.prototype.bind2 = function(context){
+    const self = this
+    let args = [].prototype.slice.call(arguments,1)
+    console.log(args,arguments)
+    let fnop = function(){}
+    const fbound = function(){
+        this.value = '321'
+        const bindArg = [].prototype.slice.call(arguments)
+        console.log(this)
+        return self.apply( this instanceof fnop?this: context,args.concat(bindArg))
+    }
+    console.dir(this)
+    
+    fnop.prototype = this.prototype
+    fbound.prototype = new fnop()
+    return fbound
+}
+
+const foo = {value:123}
+function bar(a,b){
+    console.log(this,a,b)
+}
+const test=bar.bind2(foo,1)
+
+let test1 = new test(2)
+console.log(test1)
+
+
+function _sqrt(x){
+    if(x===1) return 1
+    let left = 0,right = x;
+    while(left+1 < right){
+        const mid = left + (right-left) /2
+        if(mid*mid > x) right = mid
+        else if(mid * mid <x) left = mid
+        else return mid
+    }
+    return left
+}
+
+</script>
+</body>
+</html>
